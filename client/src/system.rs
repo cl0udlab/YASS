@@ -1,6 +1,9 @@
 use os_info;
 use sysinfo::{Components, Cpu, Disks, Networks, System};
 
+pub struct PCInfo {
+    pub pc_name: String,
+}
 pub struct SystemInfo {
     pub os_name: String,
     pub os_version: String,
@@ -27,6 +30,12 @@ pub struct DiskInfo {
     pub total_space: u64,
     pub available_space: u64,
     pub file_system: String,
+}
+
+pub fn get_pc_info() -> PCInfo {
+    PCInfo {
+        pc_name: hostname::get().unwrap().to_string_lossy().to_string(),
+    }
 }
 
 pub fn get_system_info(s: &System) -> SystemInfo {

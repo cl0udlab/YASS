@@ -8,3 +8,4 @@ sysinfo = "0.32.0"
 reqwest = { version = "0.12", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 os_info = "3"
+hostname = "^0.4"

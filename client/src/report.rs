@@ -1,4 +1,4 @@
-use crate::system::{SystemInfo, MemoryInfo};
+use crate::system::{SystemInfo, MemoryInfo, PCInfo};
 
 pub fn print_system_info(system_info: &SystemInfo) {
     println!("OS Name: {}", system_info.os_name);
@@ -14,4 +14,8 @@ pub fn print_memory_info(memory_info: &MemoryInfo) {
     println!("Used Memory: {} GB", memory_info.used_memory / 1024 / 1024 / 1024);
     println!("Total Swap: {} GB", memory_info.total_swap / 1024 / 1024 / 1024);
     println!("Used Swap: {} GB", memory_info.used_swap / 1024 / 1024 / 1024);
+}
+
+pub fn print_pc_info(pc_info: &PCInfo) {
+    println!("PC Name: {}", pc_info.pc_name);
 }
