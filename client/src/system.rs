@@ -25,12 +25,36 @@ pub struct NetworkInfo {
     pub transmitted_bytes: u64,
 }
 
-pub struct DiskInfo {
+
+pub struct Disk {
     pub name: String,
     pub total_space: u64,
     pub available_space: u64,
+    pub used_space: u64,
     pub file_system: String,
 }
+
+pub struct  DisksInfo {
+    pub disksinfo: Vec<Disk>,
+}
+
+pub fn get_disks_info() -> DisksInfo {
+    let disks = Disks::new_with_refreshed_list();
+    let mut diskinfo = DisksInfo {
+        disksinfo: Vec::new(),
+    };
+    for disk in disks.iter() {
+        diskinfo.disksinfo.push(Disk {
+            name: disk.name().to_str().unwrap().to_string(),
+            total_space: disk.total_space(),
+            available_space: disk.available_space(),
+            used_space: disk.total_space() - disk.available_space(),
+            file_system: disk.file_system().to_str().unwrap().to_string(),
+        });
+    }
+    diskinfo
+}
+
 
 pub fn get_pc_info() -> PCInfo {
     PCInfo {

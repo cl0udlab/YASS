@@ -1,7 +1,7 @@
 mod report;
 mod system;
 
-use report::{print_system_info,print_memory_info,print_pc_info};
+use report::{print_system_info,print_memory_info,print_pc_info,print_disks_info};
 use sysinfo::System;
 fn main() {
     let mut system = System::new();
@@ -12,4 +12,6 @@ fn main() {
     print_memory_info(&memory_info);
     let pc_info = system::get_pc_info();
     print_pc_info(&pc_info);
+    let disk_info = system::get_disks_info();
+    print_disks_info(&disk_info);
 }

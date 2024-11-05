@@ -1,4 +1,4 @@
-use crate::system::{SystemInfo, MemoryInfo, PCInfo};
+use crate::system::{SystemInfo, MemoryInfo, PCInfo, DisksInfo};
 
 pub fn print_system_info(system_info: &SystemInfo) {
     println!("OS Name: {}", system_info.os_name);
@@ -18,4 +18,14 @@ pub fn print_memory_info(memory_info: &MemoryInfo) {
 
 pub fn print_pc_info(pc_info: &PCInfo) {
     println!("PC Name: {}", pc_info.pc_name);
+}
+
+pub fn print_disks_info(disks_info: &DisksInfo) {
+    for disk in disks_info.disksinfo.iter() {
+        println!("Disk Name: {}", disk.name);
+        println!("Total Space: {} GB", disk.total_space / 1024 / 1024 / 1024);
+        println!("Available Space: {} GB", disk.available_space / 1024 / 1024 / 1024);
+        println!("Used Space: {} GB", disk.used_space / 1024 / 1024 / 1024);
+        println!("File System: {}", disk.file_system);
+    }
 }
