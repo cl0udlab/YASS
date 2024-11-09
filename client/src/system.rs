@@ -19,12 +19,17 @@ pub struct MemoryInfo {
     pub used_swap: u64,
 }
 
-pub struct NetworkInfo {
+#[derive(Debug)]
+pub struct Network {
     pub interface_name: String,
     pub received_bytes: u64,
     pub transmitted_bytes: u64,
 }
 
+#[derive(Debug)]
+pub struct NetworkInfo {
+    pub network_info: Vec<Network>,
+}
 
 pub struct Disk {
     pub name: String,
@@ -34,8 +39,26 @@ pub struct Disk {
     pub file_system: String,
 }
 
-pub struct  DisksInfo {
+pub struct DisksInfo {
     pub disksinfo: Vec<Disk>,
+}
+
+//TODO: 持續收集數據，不然都是0
+pub fn get_network_info() -> NetworkInfo {
+    let mut networks = Networks::new();
+    networks.refresh_list();
+
+    let mut networkinfo = NetworkInfo {
+        network_info: Vec::new(),
+    };
+    for (interface_name, network) in networks.iter() {
+        networkinfo.network_info.push(Network {
+            interface_name: interface_name.to_string(),
+            received_bytes: network.received(),
+            transmitted_bytes: network.transmitted(),
+        });
+    }
+    networkinfo
 }
 
 pub fn get_disks_info() -> DisksInfo {
@@ -54,7 +77,6 @@ pub fn get_disks_info() -> DisksInfo {
     }
     diskinfo
 }
-
 
 pub fn get_pc_info() -> PCInfo {
     PCInfo {

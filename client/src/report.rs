@@ -1,4 +1,4 @@
-use crate::system::{SystemInfo, MemoryInfo, PCInfo, DisksInfo};
+use crate::system::{SystemInfo, MemoryInfo, PCInfo, DisksInfo,NetworkInfo};
 
 pub fn print_system_info(system_info: &SystemInfo) {
     println!("OS Name: {}", system_info.os_name);
@@ -27,5 +27,13 @@ pub fn print_disks_info(disks_info: &DisksInfo) {
         println!("Available Space: {} GB", disk.available_space / 1024 / 1024 / 1024);
         println!("Used Space: {} GB", disk.used_space / 1024 / 1024 / 1024);
         println!("File System: {}", disk.file_system);
+    }
+}
+
+pub fn print_network_info(network_info: &NetworkInfo) {
+    for network in network_info.network_info.iter() {
+        println!("Interface Name: {}", network.interface_name);
+        println!("Received Bytes: {}", network.received_bytes);
+        println!("Transmitted Bytes: {}", network.transmitted_bytes);
     }
 }
