@@ -10,6 +10,7 @@ pub struct SystemInfo {
     pub kernel_version: String,
     pub cpu_name: String,
     pub uptime: u64,
+    pub process_count: u64,
 }
 
 pub struct MemoryInfo {
@@ -113,6 +114,7 @@ pub fn get_system_info(s: &System) -> SystemInfo {
         kernel_version: System::kernel_version().unwrap_or("Unknown".to_string()),
         cpu_name,
         uptime: System::uptime(),
+        process_count: s.processes().len() as u64,
     }
 }
 

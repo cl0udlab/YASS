@@ -7,6 +7,7 @@ pub fn print_system_info(system_info: &SystemInfo) {
     println!("Uptime: {} seconds", system_info.uptime);
     println!("CPU Name: {:?}", system_info.cpu_name);
     println!("Uptime: {} {} {} {}", system_info.uptime / 86400, system_info.uptime / 3600 % 24, system_info.uptime / 60 % 60, system_info.uptime % 60);
+    println!("Process Count: {}", system_info.process_count);
 }
 
 pub fn print_memory_info(memory_info: &MemoryInfo) {
