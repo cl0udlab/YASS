@@ -1,4 +1,4 @@
-use crate::system::{SystemInfo, MemoryInfo, PCInfo, DisksInfo,NetworkInfo};
+use crate::system::{SystemInfo, MemoryInfo, PCInfo, DisksInfo,NetworkInfo,CpuInfo};
 
 pub fn print_system_info(system_info: &SystemInfo) {
     println!("OS Name: {}", system_info.os_name);
@@ -35,5 +35,12 @@ pub fn print_network_info(network_info: &NetworkInfo) {
         println!("Interface Name: {}", network.interface_name);
         println!("Received Bytes: {}", network.received_bytes);
         println!("Transmitted Bytes: {}", network.transmitted_bytes);
+    }
+}
+
+pub fn print_cpu_info(cpu_info: &CpuInfo) {
+    for cpu in cpu_info.cpu_info.iter() {
+        println!("CPU Name: {}", cpu.cpu_name);
+        println!("CPU Usage: {}%", cpu.cpu_usage);
     }
 }

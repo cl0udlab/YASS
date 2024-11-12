@@ -1,5 +1,5 @@
 use os_info;
-use sysinfo::{Components, Cpu, Disks, Networks, System};
+use sysinfo::{Disks, Networks, System};
 
 pub struct PCInfo {
     pub pc_name: String,
@@ -19,14 +19,12 @@ pub struct MemoryInfo {
     pub used_swap: u64,
 }
 
-#[derive(Debug)]
 pub struct Network {
     pub interface_name: String,
     pub received_bytes: u64,
     pub transmitted_bytes: u64,
 }
 
-#[derive(Debug)]
 pub struct NetworkInfo {
     pub network_info: Vec<Network>,
 }
@@ -41,6 +39,15 @@ pub struct Disk {
 
 pub struct DisksInfo {
     pub disksinfo: Vec<Disk>,
+}
+
+pub struct OneCpuInfo {
+    pub cpu_name: String,
+    pub cpu_usage: f32,
+}
+
+pub struct CpuInfo {
+    pub cpu_info: Vec<OneCpuInfo>,
 }
 
 //TODO: 持續收集數據，不然都是0
@@ -59,6 +66,20 @@ pub fn get_network_info() -> NetworkInfo {
         });
     }
     networkinfo
+}
+
+pub fn get_cpu_info(s: &System) -> CpuInfo {
+    let mut cpuinfo = CpuInfo {
+        cpu_info: Vec::new(),
+    };
+
+    for (i, cpu) in s.cpus().iter().enumerate() {
+        cpuinfo.cpu_info.push(OneCpuInfo {
+            cpu_name: format!("CPU{}", i),
+            cpu_usage: cpu.cpu_usage(),
+        });
+    }
+    cpuinfo
 }
 
 pub fn get_disks_info() -> DisksInfo {
