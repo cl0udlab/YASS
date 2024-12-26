@@ -51,7 +51,6 @@ pub struct CpuInfo {
     pub cpu_info: Vec<OneCpuInfo>,
 }
 
-//TODO: 持續收集數據，不然都是0
 pub fn get_network_info() -> NetworkInfo {
     let mut networks = Networks::new();
     networks.refresh_list();
@@ -62,8 +61,8 @@ pub fn get_network_info() -> NetworkInfo {
     for (interface_name, network) in networks.iter() {
         networkinfo.network_info.push(Network {
             interface_name: interface_name.to_string(),
-            received_bytes: network.received(),
-            transmitted_bytes: network.transmitted(),
+            received_bytes: network.total_received(),
+            transmitted_bytes: network.total_transmitted(),
         });
     }
     networkinfo
