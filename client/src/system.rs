@@ -1,9 +1,12 @@
 use os_info;
 use sysinfo::{Disks, Networks, System};
+use serde::Serialize;
 
+#[derive(Serialize)]
 pub struct PCInfo {
     pub pc_name: String,
 }
+#[derive(Serialize)]
 pub struct SystemInfo {
     pub os_name: String,
     pub os_version: String,
@@ -12,24 +15,24 @@ pub struct SystemInfo {
     pub uptime: u64,
     pub process_count: u64,
 }
-
+#[derive(Serialize)]
 pub struct MemoryInfo {
     pub total_memory: u64,
     pub used_memory: u64,
     pub total_swap: u64,
     pub used_swap: u64,
 }
-
+#[derive(Serialize)]
 pub struct Network {
     pub interface_name: String,
     pub received_bytes: u64,
     pub transmitted_bytes: u64,
 }
-
+#[derive(Serialize)]
 pub struct NetworkInfo {
     pub network_info: Vec<Network>,
 }
-
+#[derive(Serialize)]
 pub struct Disk {
     pub name: String,
     pub total_space: u64,
@@ -37,16 +40,16 @@ pub struct Disk {
     pub used_space: u64,
     pub file_system: String,
 }
-
+#[derive(Serialize)]
 pub struct DisksInfo {
     pub disksinfo: Vec<Disk>,
 }
-
+#[derive(Serialize)]
 pub struct OneCpuInfo {
     pub cpu_name: String,
     pub cpu_usage: f32,
 }
-
+#[derive(Serialize)]
 pub struct CpuInfo {
     pub cpu_info: Vec<OneCpuInfo>,
 }
