@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YASS</title>
+    <style>
+      :root {
+        --bg-color: #f8f9fa;
+        --text-color: #333333;
+        --text-secondary: #666666;
+        --primary-color: #007bff;
+        --primary-hover: #0056b3;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --info-color: #17a2b8;
+        --nav-bg: #ffffff;
+        --card-bg: #ffffff;
+        --input-bg: #ffffff;
+        --item-bg: #f8f9fa;
+        --bar-bg: #e9ecef;
+        --border-color: #dee2e6;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --hover-bg: rgba(0, 0, 0, 0.05);
+        --success-light: #d4edda;
+        --success-dark: #155724;
+        --warning-light: #fff3cd;
+        --warning-dark: #856404;
+        --danger-light: #f8d7da;
+        --danger-dark: #721c24;
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+        --text-secondary: #b0b0b0;
+        --primary-color: #1e88e5;
+        --primary-hover: #1565c0;
+        --secondary-color: #424242;
+        --success-color: #4caf50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+        --info-color: #00bcd4;
+        --nav-bg: #1e1e1e;
+        --card-bg: #1e1e1e;
+        --input-bg: #2d2d2d;
+        --item-bg: #2d2d2d;
+        --bar-bg: #424242;
+        --border-color: #424242;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+        --hover-bg: rgba(255, 255, 255, 0.05);
+        --success-light: #2e7d32;
+        --success-dark: #1b5e20;
+        --warning-light: #f57c00;
+        --warning-dark: #e65100;
+        --danger-light: #d32f2f;
+        --danger-dark: #b71c1c;
+      }
+
+      [data-theme="blue"] {
+        --bg-color: #0f1419;
+        --text-color: #e6ffff;
+        --text-secondary: #8cc8ff;
+        --primary-color: #00d4ff;
+        --primary-hover: #0099cc;
+        --secondary-color: #1e3a5f;
+        --success-color: #00ff88;
+        --warning-color: #ffaa00;
+        --danger-color: #ff4444;
+        --info-color: #44ddff;
+        --nav-bg: #1a2332;
+        --card-bg: #1a2332;
+        --input-bg: #253447;
+        --item-bg: #253447;
+        --bar-bg: #2d3e50;
+        --border-color: #34495e;
+        --shadow-color: rgba(0, 100, 150, 0.2);
+        --hover-bg: rgba(0, 212, 255, 0.1);
+        --success-light: #004d2a;
+        --success-dark: #002d18;
+        --warning-light: #664400;
+        --warning-dark: #442200;
+        --danger-light: #661111;
+        --danger-dark: #440000;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      .navbar {
+        background-color: var(--nav-bg);
+        padding: 1rem 0;
+        box-shadow: 0 2px 4px var(--shadow-color);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-brand a {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: var(--primary-color);
+      }
+
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        cursor: pointer;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        background-color: var(--hover-bg);
+      }
+
+      .main-content {
+        max-width: 1200px;
+        margin: 80px auto 2rem;
+        padding: 0 1rem;
+        min-height: calc(100vh - 200px);
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+        text-align: center;
+        background: none;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+      }
+
+      .btn-warning {
+        background-color: var(--warning-color);
+        color: white;
+      }
+
+      .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .btn-info {
+        background-color: var(--info-color);
+        color: white;
+      }
+
+      .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .stat-card,
+      .server-card {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow-color);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .stat-card:hover,
+      .server-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--shadow-color);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .server-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+
+      .stat-text {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+      }
+
+      .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .online .status-indicator,
+      .status-badge.online {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .offline .status-indicator,
+      .status-badge.offline {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .stat-status {
+        font-size: 1.25rem;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .stat-status.good {
+        background-color: var(--success-color);
+        color: white;
+      }
+
+      .stat-status.warning {
+        background-color: var(--warning-color);
+        color: white;
+      }
+
+      .stat-status.error {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      thead {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      tbody tr:hover {
+        background-color: var(--hover-bg);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: var(--text-color);
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        font-size: 1rem;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+      }
+
+      .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60vh;
+      }
+
+      .auth-form {
+        background-color: var(--card-bg);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px var(--shadow-color);
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .auth-form h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--primary-color);
+      }
+
+      #theme-selector {
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 0.5rem;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+      }
+
+      .detail-section {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
+
+      .detail-section h3 {
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+      }
+
+      .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: var(--item-bg);
+        border-radius: 4px;
+      }
+
+      .info-item label {
+        font-weight: bold;
+        color: var(--text-secondary);
+      }
+
+      /* 警告訊息 */
+      .alert {
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .alert-success {
+        background-color: var(--success-light);
+        color: var(--success-dark);
+        border-left: 4px solid var(--success-color);
+      }
+
+      .alert-error {
+        background-color: var(--danger-light);
+        color: var(--danger-dark);
+        border-left: 4px solid var(--danger-color);
+      }
+
+      .alert-warning {
+        background-color: var(--warning-light);
+        color: var(--warning-dark);
+        border-left: 4px solid var(--warning-color);
+      }
+
+      .footer {
+        background-color: var(--nav-bg);
+        padding: 2rem 0;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        margin-top: 3rem;
+      }
+
+      @media (max-width: 768px) {
+        .nav-container {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .server-list {
+          grid-template-columns: 1fr;
+        }
+
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .page-header {
+          flex-direction: column;
+          gap: 1rem;
+          align-items: stretch;
+        }
+
+        .main-content {
+          margin-top: 120px;
+        }
+      }
+    </style>
+  </head>
+  <body data-theme="{{ theme }}">
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-brand">
+          <a href="#" onclick="showPage('dashboard')">YASS</a>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="#" class="nav-link" onclick="showPage('dashboard')"
+              >首頁</a
+            >
+          </li>
+          <li class="nav-item">
+            <select id="theme-selector" onchange="changeTheme(this.value)">
+              <option value="light">淺色主題</option>
+              <option value="dark">深色主題</option>
+              <option value="blue">藍色主題</option>
+            </select>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div id="alert-container"></div>
+
+      <div id="dashboard-page" class="page">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>線上伺服器</h3>
+            <div class="stat-number" id="online-servers">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>總伺服器數</h3>
+            <div class="stat-number" id="total-servers">0</div>
+          </div>
+          <div class="stat-card">
+            <h3>最近更新</h3>
+            <div class="stat-text" id="last-update">無資料</div>
+          </div>
+        </div>
+
+        <div class="server-overview">
+          <h2>伺服器概覽</h2>
+          <div class="server-list" id="server-overview-list">
+            <div class="loading">載入中...</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="server-detail-page" class="page hidden">
+        <div class="page-header">
+          <h1 id="server-detail-title">伺服器詳情</h1>
+        </div>
+
+        <div class="detail-grid" id="server-detail-content">
+          <div class="loading">載入中...</div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      let currentUser = null;
+      let serversData = {};
+      let currentTheme = "{{ theme }}";
+      let currentPage = "dashboard";
+
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeApp();
+      });
+
+      function initializeApp() {
+        applyTheme(currentTheme);
+        loadDashboardData();
+
+        setInterval(loadDashboardData, 30000);
+      }
+
+      function changeTheme(theme) {
+        currentTheme = theme;
+        applyTheme(theme);
+      }
+
+      function applyTheme(theme) {
+        document.body.setAttribute("data-theme", theme);
+        document.getElementById("theme-selector").value = theme;
+      }
+
+      function showPage(pageId) {
+        document.querySelectorAll(".page").forEach((page) => {
+          page.classList.add("hidden");
+        });
+
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        const targetPage = document.getElementById(pageId + "-page");
+        if (targetPage) {
+          targetPage.classList.remove("hidden");
+          currentPage = pageId;
+
+          const navLink = document.querySelector(
+            `[onclick="showPage('${pageId}')"]`
+          );
+          if (navLink) {
+            navLink.classList.add("active");
+          }
+          loadPageData(pageId);
+        }
+      }
+
+      function loadPageData(pageId) {
+        switch (pageId) {
+          case "dashboard":
+            loadDashboardData();
+            break;
+          case "servers":
+            loadServersData();
+            break;
+        }
+      }
+
+      async function loadDashboardData() {
+        try {
+          const response = await fetch("/api/servers");
+          if (response.ok) {
+            const data = await response.json();
+            serversData = data.servers || {};
+            updateDashboard(data);
+          } else {
+            console.error("載入儀表板資料失敗:", response.status);
+            showAlert("載入資料失敗", "error");
+          }
+        } catch (error) {
+          console.error("載入儀表板資料失敗:", error);
+          showAlert("網路錯誤", "error");
+        }
+      }
+
+      async function loadServersData() {
+        try {
+          const response = await fetch("/api/servers");
+          if (response.ok) {
+            const data = await response.json();
+            updateServersTable(data.servers || {});
+          } else {
+            console.error("載入伺服器資料失敗:", response.status);
+            showAlert("載入資料失敗", "error");
+          }
+        } catch (error) {
+          console.error("載入伺服器資料失敗:", error);
+          showAlert("網路錯誤", "error");
+        }
+      }
+
+      async function loadServerDetail(serverId) {
+        try {
+          const response = await fetch(`/api/servers/${serverId}`);
+          if (response.ok) {
+            const data = await response.json();
+            updateServerDetail(data);
+            showPage("server-detail");
+          } else {
+            showAlert("伺服器未找到", "error");
+          }
+        } catch (error) {
+          console.error("載入伺服器詳情失敗:", error);
+          showAlert("載入失敗", "error");
+        }
+      }
+
+      function updateDashboard(data) {
+        const servers = data.servers || {};
+
+        const serverList = Array.isArray(servers)
+          ? servers
+          : Object.values(servers);
+
+        const totalServers = serverList.length;
+        const onlineServers = serverList.filter((s) => s.online).length;
+        const lastUpdate =
+          serverList.length > 0
+            ? new Date(
+                Math.max(...serverList.map((s) => new Date(s.last_seen)))
+              ).toLocaleString()
+            : "無資料";
+
+        document.getElementById("online-servers").textContent = onlineServers;
+        document.getElementById("total-servers").textContent = totalServers;
+        document.getElementById("last-update").textContent = lastUpdate;
+
+        updateServerOverview(serverList);
+      }
+
+      function updateServerOverview(servers) {
+        const container = document.getElementById("server-overview-list");
+
+        if (servers.length === 0) {
+          container.innerHTML = '<div class="loading">尚無伺服器資料</div>';
+          return;
+        }
+
+        container.innerHTML = servers
+          .map((server) => {
+            const memoryUsage = server.memory_info
+              ? Math.round(
+                  (server.memory_info.used_memory /
+                    server.memory_info.total_memory) *
+                    100
+                )
+              : 0;
+            const cpuUsage =
+              server.cpu_info && server.cpu_info.cpu_info
+                ? Math.round(
+                    server.cpu_info.cpu_info.reduce(
+                      (sum, cpu) => sum + cpu.cpu_usage,
+                      0
+                    ) / server.cpu_info.cpu_info.length
+                  )
+                : 0;
+
+            return `
+                    <div class="server-card ${
+                      server.online ? "online" : "offline"
+                    }">
+                        <div class="server-header">
+                            <h3>${server.pc_name}</h3>
+                            <span class="status-indicator"></span>
+                        </div>
+                        <div class="server-details">
+                            <p><strong>OS:</strong> ${
+                              server.system_info?.os_name || "Unknown"
+                            } ${server.system_info?.os_version || ""}</p>
+                            <p><strong>記憶體使用:</strong> ${memoryUsage}%</p>
+                            <p><strong>CPU 使用率:</strong> ${cpuUsage}%</p>
+                            <p><strong>最後更新:</strong> ${new Date(
+                              server.last_seen
+                            ).toLocaleString()}</p>
+                        </div>
+                        <div class="server-actions">
+                            <button class="btn btn-primary" onclick="loadServerDetail('${
+                              server.id
+                            }')">查看詳情</button>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function updateServersTable(servers) {
+        const tbody = document.getElementById("servers-table-body");
+        const serverList = Array.isArray(servers)
+          ? servers
+          : Object.values(servers);
+
+        if (serverList.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" class="loading">尚無伺服器資料</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = serverList
+          .map(
+            (server) => `
+                <tr class="${server.online ? "online" : "offline"}">
+                    <td>${server.pc_name}</td>
+                    <td>
+                        <span class="status-badge ${
+                          server.online ? "online" : "offline"
+                        }">
+                            ${server.online ? "線上" : "離線"}
+                        </span>
+                    </td>
+                    <td>${server.system_info?.os_name || "Unknown"} ${
+              server.system_info?.os_version || ""
+            }</td>
+                    <td>${server.ip_address || "未知"}</td>
+                    <td>${new Date(server.last_seen).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="loadServerDetail('${
+                          server.id
+                        }')">查看</button>
+                        <button class="btn btn-sm btn-warning" onclick="editServer('${
+                          server.id
+                        }')">編輯</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteServer('${
+                          server.id
+                        }')">刪除</button>
+                    </td>
+                </tr>
+            `
+          )
+          .join("");
+      }
+
+      function updateServerDetail(server) {
+        document.getElementById("server-detail-title").textContent =
+          server.pc_name + " - 詳情";
+
+        const memoryUsage = server.memory_info
+          ? Math.round(
+              (server.memory_info.used_memory /
+                server.memory_info.total_memory) *
+                100
+            )
+          : 0;
+
+        const content = document.getElementById("server-detail-content");
+
+        let systemInfoHtml = `
+                <div class="detail-section">
+                    <h3>系統資訊</h3>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <label>電腦名稱:</label>
+                            <span>${server.pc_name}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>IP 位址:</label>
+                            <span>${server.ip_address || "未知"}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>作業系統:</label>
+                            <span>${server.system_info?.os_name || "Unknown"} ${
+          server.system_info?.os_version || ""
+        }</span>
+                        </div>
+                        <div class="info-item">
+                            <label>核心版本:</label>
+                            <span>${
+                              server.system_info?.kernel_version || "Unknown"
+                            }</span>
+                        </div>
+                        <div class="info-item">
+                            <label>CPU:</label>
+                            <span>${
+                              server.system_info?.cpu_name || "Unknown"
+                            }</span>
+                        </div>
+                        <div class="info-item">
+                            <label>運行時間:</label>
+                            <span>${formatUptime(
+                              server.system_info?.uptime || 0
+                            )}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>進程數:</label>
+                            <span>${
+                              server.system_info?.process_count || 0
+                            }</span>
+                        </div>
+                        <div class="info-item">
+                            <label>狀態:</label>
+                            <span class="status-badge ${
+                              server.online ? "online" : "offline"
+                            }">
+                                ${server.online ? "線上" : "離線"}
+                            </span>
+                        </div>
+                        <div class="info-item">
+                            <label>最後更新:</label>
+                            <span>${new Date(
+                              server.last_seen
+                            ).toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>`;
+
+        // 記憶體資訊
+        let memoryInfoHtml = `
+                <div class="detail-section">
+                    <h3>記憶體使用</h3>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <label>總記憶體:</label>
+                            <span>${formatBytes(
+                              server.memory_info?.total_memory || 0
+                            )}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>已使用:</label>
+                            <span>${formatBytes(
+                              server.memory_info?.used_memory || 0
+                            )} (${memoryUsage}%)</span>
+                        </div>
+                        <div class="info-item">
+                            <label>可用記憶體:</label>
+                            <span>${formatBytes(
+                              (server.memory_info?.total_memory || 0) -
+                                (server.memory_info?.used_memory || 0)
+                            )}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>總交換空間:</label>
+                            <span>${formatBytes(
+                              server.memory_info?.total_swap || 0
+                            )}</span>
+                        </div>
+                        <div class="info-item">
+                            <label>已使用交換空間:</label>
+                            <span>${formatBytes(
+                              server.memory_info?.used_swap || 0
+                            )}</span>
+                        </div>
+                    </div>
+                </div>`;
+
+        let cpuInfoHtml = "";
+        if (
+          server.cpu_info &&
+          server.cpu_info.cpu_info &&
+          server.cpu_info.cpu_info.length > 0
+        ) {
+          const avgCpuUsage =
+            server.cpu_info.cpu_info.reduce(
+              (sum, cpu) => sum + cpu.cpu_usage,
+              0
+            ) / server.cpu_info.cpu_info.length;
+          cpuInfoHtml = `
+                    <div class="detail-section">
+                        <h3>CPU 使用率</h3>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <label>平均使用率:</label>
+                                <span>${avgCpuUsage.toFixed(2)}%</span>
+                            </div>
+                            ${server.cpu_info.cpu_info
+                              .map(
+                                (cpu) => `
+                                <div class="info-item">
+                                    <label>${cpu.cpu_name}:</label>
+                                    <span>${cpu.cpu_usage.toFixed(2)}%</span>
+                                </div>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>`;
+        }
+
+        // 硬碟資訊
+        let diskInfoHtml = "";
+        if (
+          server.disks_info &&
+          server.disks_info.disksinfo &&
+          server.disks_info.disksinfo.length > 0
+        ) {
+          diskInfoHtml = `
+                    <div class="detail-section">
+                        <h3>硬碟使用</h3>
+                        <div class="info-list">
+                            ${server.disks_info.disksinfo
+                              .map((disk) => {
+                                const usagePercent = Math.round(
+                                  (disk.used_space / disk.total_space) * 100
+                                );
+                                return `
+                                    <div class="info-item">
+                                        <label>${disk.name} (${
+                                  disk.file_system
+                                }):</label>
+                                        <span>${formatBytes(
+                                          disk.used_space
+                                        )} / ${formatBytes(
+                                  disk.total_space
+                                )} (${usagePercent}%)</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>可用空間:</label>
+                                        <span>${formatBytes(
+                                          disk.available_space
+                                        )}</span>
+                                    </div>
+                                `;
+                              })
+                              .join("")}
+                        </div>
+                    </div>`;
+        }
+
+        let networkInfoHtml = "";
+        if (
+          server.network_info &&
+          server.network_info.network_info &&
+          server.network_info.network_info.length > 0
+        ) {
+          const activeInterfaces = server.network_info.network_info.filter(
+            (net) => net.received_bytes > 0 || net.transmitted_bytes > 0
+          );
+          if (activeInterfaces.length > 0) {
+            networkInfoHtml = `
+                        <div class="detail-section">
+                            <h3>網路介面 (有流量)</h3>
+                            <div class="info-list">
+                                ${activeInterfaces
+                                  .map(
+                                    (net) => `
+                                    <div class="info-item">
+                                        <label>${net.interface_name}:</label>
+                                        <span>接收: ${formatBytes(
+                                          net.received_bytes
+                                        )}, 傳送: ${formatBytes(
+                                      net.transmitted_bytes
+                                    )}</span>
+                                    </div>
+                                `
+                                  )
+                                  .join("")}
+                            </div>
+                        </div>`;
+          }
+        }
+
+        content.innerHTML =
+          systemInfoHtml +
+          memoryInfoHtml +
+          cpuInfoHtml +
+          diskInfoHtml +
+          networkInfoHtml;
+      }
+
+      function showAlert(message, type = "info") {
+        const container = document.getElementById("alert-container");
+        const alert = document.createElement("div");
+        alert.className = `alert alert-${type}`;
+        alert.textContent = message;
+
+        container.appendChild(alert);
+
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.parentNode.removeChild(alert);
+          }
+        }, 5000);
+      }
+
+      function formatBytes(bytes) {
+        if (!bytes) return "0 B";
+        const units = ["B", "KB", "MB", "GB", "TB"];
+        let size = bytes;
+        let unitIndex = 0;
+
+        while (size >= 1024 && unitIndex < units.length - 1) {
+          size /= 1024;
+          unitIndex++;
+        }
+
+        return unitIndex === 0
+          ? `${bytes} ${units[unitIndex]}`
+          : `${size.toFixed(2)} ${units[unitIndex]}`;
+      }
+
+      function formatUptime(seconds) {
+        if (!seconds) return "0 秒";
+
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds % 86400) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        let result = [];
+        if (days > 0) result.push(`${days} 天`);
+        if (hours > 0) result.push(`${hours} 小時`);
+        if (minutes > 0) result.push(`${minutes} 分鐘`);
+        if (secs > 0 && result.length === 0) result.push(`${secs} 秒`);
+
+        return result.slice(0, 2).join(" ");
+      }
+
+      window.addEventListener("online", function () {
+        showAlert("網路連線已恢復", "success");
+      });
+
+      window.addEventListener("offline", function () {
+        showAlert("網路連線已中斷", "warning");
+      });
+
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden && currentPage === "dashboard") {
+          loadDashboardData();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -10,6 +10,7 @@ use tokio::time;
 
 #[derive(Serialize)]
 struct SystemInfoPayload {
+    server_id: String,
     pc_info: system::PCInfo,
     system_info: system::SystemInfo,
     memory_info: system::MemoryInfo,
@@ -26,6 +27,14 @@ const UPDATE_INTERVAL_SECS: u64 = 60;
 async fn main() -> Result<()> {
     println!("系統監控客戶端已啟動");
     println!("將每 {} 秒向 API 發送一次資料", UPDATE_INTERVAL_SECS);
+
+    let server_id = std::env::var("YASS_SERVER_ID").unwrap_or_else(|_| {
+        hostname::get()
+            .map(|h| h.to_string_lossy().to_string())
+            .unwrap_or_else(|_| "unknown".to_string())
+    });
+
+    println!("使用伺服器 ID: {}", server_id);
 
     let mut interval = time::interval(Duration::from_secs(UPDATE_INTERVAL_SECS));
 
@@ -46,6 +55,7 @@ async fn main() -> Result<()> {
         print_pc_info(&pc_info);
 
         let payload = SystemInfoPayload {
+            server_id: server_id.clone(),
             pc_info,
             system_info,
             memory_info,
