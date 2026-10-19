@@ -1,7 +1,7 @@
 mod report;
 mod system;
 
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
 use report::print_pc_info;
 use serde::Serialize;
 use std::time::Duration;
@@ -19,29 +19,60 @@ struct SystemInfoPayload {
     cpu_info: system::CpuInfo,
 }
 
-const API_URL: &str = "http://127.0.0.1:9000/api/system_info";
+struct Config {
+    api_url: String,
+    server_id: String,
+    token: String,
+    interval: Duration,
+}
 
-const UPDATE_INTERVAL_SECS: u64 = 60;
+impl Config {
+    fn from_env() -> Result<Self> {
+        let panel_url = std::env::var("YASS_URL")
+            .unwrap_or_else(|_| "http://127.0.0.1:9000".to_string())
+            .trim_end_matches('/')
+            .to_string();
+
+        let server_id = std::env::var("YASS_SERVER_ID")
+            .context("缺少 YASS_SERVER_ID，請在面板上新增伺服器並執行產生的安裝指令")?;
+        let token = std::env::var("YASS_TOKEN")
+            .context("缺少 YASS_TOKEN，請在面板上新增伺服器並執行產生的安裝指令")?;
+
+        let interval = std::env::var("YASS_INTERVAL")
+            .ok()
+            .and_then(|v| v.parse::<u64>().ok())
+            .unwrap_or(60)
+            .max(1);
+
+        Ok(Self {
+            api_url: format!("{}/api/system_info", panel_url),
+            server_id,
+            token,
+            interval: Duration::from_secs(interval),
+        })
+    }
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    let config = Config::from_env()?;
+
     println!("系統監控客戶端已啟動");
-    println!("將每 {} 秒向 API 發送一次資料", UPDATE_INTERVAL_SECS);
+    println!("回報目標: {}", config.api_url);
+    println!("伺服器 ID: {}", config.server_id);
+    println!("回報間隔: {} 秒", config.interval.as_secs());
 
-    let server_id = std::env::var("YASS_SERVER_ID").unwrap_or_else(|_| {
-        hostname::get()
-            .map(|h| h.to_string_lossy().to_string())
-            .unwrap_or_else(|_| "unknown".to_string())
-    });
+    let http = reqwest::Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()?;
 
-    println!("使用伺服器 ID: {}", server_id);
+    let mut system = System::new_all();
 
-    let mut interval = time::interval(Duration::from_secs(UPDATE_INTERVAL_SECS));
+    let mut interval = time::interval(config.interval);
 
     loop {
         interval.tick().await;
 
-        let mut system = System::new_all();
         system.refresh_all();
 
         let pc_info = system::get_pc_info();
@@ -55,7 +86,7 @@ async fn main() -> Result<()> {
         print_pc_info(&pc_info);
 
         let payload = SystemInfoPayload {
-            server_id: server_id.clone(),
+            server_id: config.server_id.clone(),
             pc_info,
             system_info,
             memory_info,
@@ -64,23 +95,37 @@ async fn main() -> Result<()> {
             cpu_info,
         };
 
-        // 發送資料到 API
-        match send_system_info(&payload).await {
+        match send_system_info(&http, &config, &payload).await {
             Ok(_) => println!("系統資訊已成功發送到 API"),
             Err(e) => eprintln!("發送系統資訊時出錯: {}", e),
         }
     }
 }
 
-async fn send_system_info(payload: &SystemInfoPayload) -> Result<()> {
-    let client = reqwest::Client::new();
-    let response = client.post(API_URL).json(payload).send().await?;
+async fn send_system_info(
+    http: &reqwest::Client,
+    config: &Config,
+    payload: &SystemInfoPayload,
+) -> Result<()> {
+    let response = http
+        .post(&config.api_url)
+        .bearer_auth(&config.token)
+        .json(payload)
+        .send()
+        .await?;
 
-    if response.status().is_success() {
-        Ok(())
-    } else {
-        let status = response.status();
-        let error_text = response.text().await?;
-        bail!("API 返回錯誤 ({}): {}", status, error_text)
+    let status = response.status();
+    if status.is_success() {
+        return Ok(());
     }
+
+    let body = response.text().await.unwrap_or_default();
+    if status == reqwest::StatusCode::UNAUTHORIZED {
+        bail!(
+            "憑證被拒（{}）：{}。面板可能已重置 token 或刪除此伺服器，請重新執行安裝指令。",
+            status,
+            body
+        );
+    }
+    bail!("API 返回錯誤 ({}): {}", status, body)
 }

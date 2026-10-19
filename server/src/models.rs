@@ -74,6 +74,9 @@ pub struct SystemInfoPayload {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ServerData {
     pub id: String,
+    pub name: String,
+    pub token: String,
+    pub created_at: String,
     pub pc_name: String,
     pub ip_address: Option<String>,
     pub last_seen: String,
@@ -88,7 +91,10 @@ pub struct ServerData {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ServerDataForFrontend {
     pub id: String,
+    pub name: String,
+    pub created_at: String,
     pub pc_name: String,
+    pub ip_address: Option<String>,
     pub last_seen: String,
     pub online: bool,
     pub system_info: Option<SystemInfo>,
@@ -102,7 +108,10 @@ impl From<ServerData> for ServerDataForFrontend {
     fn from(server: ServerData) -> Self {
         Self {
             id: server.id,
+            name: server.name,
+            created_at: server.created_at,
             pc_name: server.pc_name,
+            ip_address: server.ip_address,
             last_seen: server.last_seen,
             online: server.online,
             system_info: server.system_info,
@@ -112,4 +121,24 @@ impl From<ServerData> for ServerDataForFrontend {
             network_info: server.network_info,
         }
     }
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct CreateServerRequest {
+    pub name: String,
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct RegistrationInfo {
+    pub id: String,
+    pub name: String,
+    pub token: String,
+    pub panel_url: String,
+    pub install_command: String,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct LoginRequest {
+    pub username: String,
+    pub password: String,
 }

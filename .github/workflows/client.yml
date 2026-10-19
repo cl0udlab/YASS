@@ -1,0 +1,72 @@
+name: client
+
+on:
+  push:
+    tags: ["v*"]
+  pull_request:
+    paths: ["client/**", "Cargo.lock", ".github/workflows/client.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            target: x86_64-unknown-linux-musl
+          - arch: aarch64
+            target: aarch64-unknown-linux-musl
+          - arch: armv7l
+            target: armv7-unknown-linux-musleabihf
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
+      - name: Build
+        run: cross build --release --locked -p client --target ${{ matrix.target }}
+
+      - name: Rename
+        run: |
+          mkdir -p dist
+          cp target/${{ matrix.target }}/release/client dist/yass-client-${{ matrix.arch }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yass-client-${{ matrix.arch }}
+          path: dist/yass-client-${{ matrix.arch }}
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          pattern: yass-client-*
+          merge-multiple: true
+
+      - name: Checksums
+        run: cd dist && sha256sum yass-client-* > SHA256SUMS
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*

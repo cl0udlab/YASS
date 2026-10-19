@@ -1,0 +1,312 @@
+/* 主題 token。新主題只要再加一組 [data-theme="..."] 即可 */
+:root {
+  --bg-color: #f8f9fa;
+  --text-color: #333333;
+  --text-secondary: #666666;
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --nav-bg: #ffffff;
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --item-bg: #f8f9fa;
+  --bar-bg: #e9ecef;
+  --border-color: #dee2e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --success-light: #d4edda;
+  --success-dark: #155724;
+  --warning-light: #fff3cd;
+  --warning-dark: #856404;
+  --danger-light: #f8d7da;
+  --danger-dark: #721c24;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --text-secondary: #b0b0b0;
+  --primary-color: #1e88e5;
+  --primary-hover: #1565c0;
+  --secondary-color: #424242;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #00bcd4;
+  --nav-bg: #1e1e1e;
+  --card-bg: #1e1e1e;
+  --input-bg: #2d2d2d;
+  --item-bg: #2d2d2d;
+  --bar-bg: #424242;
+  --border-color: #424242;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --success-light: #2e7d32;
+  --success-dark: #1b5e20;
+  --warning-light: #f57c00;
+  --warning-dark: #e65100;
+  --danger-light: #d32f2f;
+  --danger-dark: #b71c1c;
+}
+
+[data-theme="blue"] {
+  --bg-color: #0f1419;
+  --text-color: #e6ffff;
+  --text-secondary: #8cc8ff;
+  --primary-color: #00d4ff;
+  --primary-hover: #0099cc;
+  --secondary-color: #1e3a5f;
+  --success-color: #00ff88;
+  --warning-color: #ffaa00;
+  --danger-color: #ff4444;
+  --info-color: #44ddff;
+  --nav-bg: #1a2332;
+  --card-bg: #1a2332;
+  --input-bg: #253447;
+  --item-bg: #253447;
+  --bar-bg: #2d3e50;
+  --border-color: #34495e;
+  --shadow-color: rgba(0, 100, 150, 0.2);
+  --hover-bg: rgba(0, 212, 255, 0.1);
+  --success-light: #004d2a;
+  --success-dark: #002d18;
+  --warning-light: #664400;
+  --warning-dark: #442200;
+  --danger-light: #661111;
+  --danger-dark: #440000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+  text-align: center;
+  background: none;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-info {
+  background-color: var(--info-color);
+  color: white;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: white;
+}
+
+.status-badge.online {
+  background-color: var(--success-color);
+}
+
+.status-badge.offline {
+  background-color: var(--danger-color);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.hint {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.chart-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.chart-toolbar h3 {
+  margin: 0;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.chart-legend span::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-right: 0.35rem;
+  background: currentColor;
+}
+
+.chart-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2.5rem 0;
+  font-size: 0.9rem;
+}
+
+.range-group {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.rank-row {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.rank-row:last-child {
+  border-bottom: none;
+}
+
+.rank-index {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.rank-bar {
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--primary-color);
+  min-width: 2px;
+  margin-top: 0.25rem;
+}
+
+.rank-value {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}

@@ -1,6 +1,6 @@
 use os_info;
-use sysinfo::{Disks, Networks, System};
 use serde::Serialize;
+use sysinfo::{Disks, Networks, System};
 
 #[derive(Serialize)]
 pub struct PCInfo {
