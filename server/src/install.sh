@@ -5,6 +5,8 @@ PANEL_URL=""
 SERVER_ID=""
 TOKEN=""
 INTERVAL="60"
+REPO="cl0udlab/YASS"
+VERSION="latest"
 
 BIN_PATH="/usr/local/bin/yass-client"
 CONF_DIR="/etc/yass"
@@ -20,6 +22,8 @@ while [ $# -gt 0 ]; do
     --id)       SERVER_ID="${2:-}"; shift 2 ;;
     --token)    TOKEN="${2:-}"; shift 2 ;;
     --interval) INTERVAL="${2:-}"; shift 2 ;;
+    --repo)     REPO="${2:-}"; shift 2 ;;
+    --version)  VERSION="${2:-}"; shift 2 ;;
     *) die "未知參數: $1" ;;
   esac
 done
@@ -38,18 +42,31 @@ case "$ARCH" in
   *) die "不支援的架構: ${ARCH}" ;;
 esac
 
+ASSET="yass-client-${ARCH}"
+if [ "$VERSION" = "latest" ]; then
+  RELEASE_URL="https://github.com/${REPO}/releases/latest/download"
+else
+  RELEASE_URL="https://github.com/${REPO}/releases/download/${VERSION}"
+fi
+
 TMP_BIN="$(mktemp)"
-trap 'rm -f "$TMP_BIN"' EXIT
+TMP_SUMS="$(mktemp)"
+trap 'rm -f "$TMP_BIN" "$TMP_SUMS"' EXIT
 
-info "從 ${PANEL_URL} 下載 ${ARCH} client"
-curl -fsSL -o "$TMP_BIN" "${PANEL_URL}/download/client?arch=${ARCH}" \
-  || die "下載失敗，請確認面板的 bin/ 目錄裡有 yass-client-${ARCH}"
-
+info "從 GitHub ${REPO} (${VERSION}) 下載 ${ASSET}"
+curl -fsSL -o "$TMP_BIN" "${RELEASE_URL}/${ASSET}" \
+  || die "下載失敗：${RELEASE_URL}/${ASSET}"
 [ -s "$TMP_BIN" ] || die "下載到的檔案是空的"
 
-if head -c 1 "$TMP_BIN" | grep -q '{'; then
-  cat "$TMP_BIN" >&2
-  die "面板沒有提供 ${ARCH} 的 client 二進位"
+if command -v sha256sum >/dev/null 2>&1; then
+  curl -fsSL -o "$TMP_SUMS" "${RELEASE_URL}/SHA256SUMS" || die "無法取得 SHA256SUMS"
+  expected="$(awk -v f="$ASSET" '$2 == f || $2 == "*"f { print $1 }' "$TMP_SUMS")"
+  [ -n "$expected" ] || die "SHA256SUMS 裡沒有 ${ASSET}"
+  actual="$(sha256sum "$TMP_BIN" | awk '{ print $1 }')"
+  [ "$expected" = "$actual" ] || die "${ASSET} 校驗失敗"
+  info "SHA256 校驗通過"
+else
+  info "找不到 sha256sum，略過校驗"
 fi
 
 info "安裝到 ${BIN_PATH}"

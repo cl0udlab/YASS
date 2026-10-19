@@ -160,39 +160,6 @@ pub async fn install_script() -> Result<HttpResponse> {
         .body(include_str!("install.sh")))
 }
 
-#[derive(serde::Deserialize)]
-pub struct DownloadQuery {
-    pub arch: String,
-}
-
-pub async fn download_client(query: web::Query<DownloadQuery>) -> Result<HttpResponse> {
-    const SUPPORTED: &[&str] = &["x86_64", "aarch64", "armv7l"];
-
-    if !SUPPORTED.contains(&query.arch.as_str()) {
-        return Ok(HttpResponse::NotFound().json(json!({
-            "error": "不支援的架構",
-            "arch": query.arch,
-            "supported": SUPPORTED,
-        })));
-    }
-
-    let bin_dir = std::env::var("YASS_BIN_DIR").unwrap_or_else(|_| "bin".to_string());
-    let path = format!("{}/yass-client-{}", bin_dir, query.arch);
-    match std::fs::read(&path) {
-        Ok(bytes) => Ok(HttpResponse::Ok()
-            .content_type("application/octet-stream")
-            .body(bytes)),
-        Err(e) => {
-            log::error!("讀取 client 二進位 {} 失敗: {}", path, e);
-            Ok(HttpResponse::NotFound().json(json!({
-                "error": "面板上找不到此架構的 client 二進位",
-                "expected_path": path,
-                "hint": "請從 GitHub Release 下載 yass-client-<arch> 放到此目錄（或以 YASS_BIN_DIR 指定）",
-            })))
-        }
-    }
-}
-
 fn bearer_token(req: &HttpRequest) -> Option<String> {
     let raw = req.headers().get("Authorization")?.to_str().ok()?;
     let token = raw.strip_prefix("Bearer ")?.trim();

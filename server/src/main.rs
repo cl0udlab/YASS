@@ -18,7 +18,6 @@ mod store;
 
 pub fn router_config(app: &mut actix_web::web::ServiceConfig) {
     app.route("/install.sh", web::get().to(handlers::install_script))
-        .route("/download/client", web::get().to(handlers::download_client))
         .service(
             web::scope("/api")
                 .route("/auth/login", web::post().to(handlers::login))

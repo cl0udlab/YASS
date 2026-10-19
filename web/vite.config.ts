@@ -22,7 +22,6 @@ export default defineConfig({
     proxy: {
       "/api": backend,
       "/install.sh": backend,
-      "/download": backend,
     },
   },
 });
